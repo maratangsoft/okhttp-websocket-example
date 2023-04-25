@@ -6,17 +6,20 @@ import okhttp3.WebSocket
 import okio.ByteString
 
 class WebSocketListener(
-    private val callback: (String) -> Unit
+    private val onOpen: () -> Unit,
+    private val onMessage: (String) -> Unit
 ): okhttp3.WebSocketListener() {
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
         Log.d("TTT", "onOpen...")
+
+        onOpen.invoke()
     }
 
     override fun onMessage(webSocket: WebSocket, text: String) {
         Log.d("TTT", "onMessage(string)...")
 
-        callback.invoke(text)
+        onMessage.invoke(text)
     }
 
     override fun onMessage(webSocket: WebSocket, bytes: ByteString) {

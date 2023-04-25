@@ -7,6 +7,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -79,18 +80,20 @@ fun MainUi(
         }
 
         Spacer(Modifier.height(30.dp))
-//        Button(
-//            onClick = { viewModel.connectWebSocket() },
-//            content = { Text("connect") }
-//        )
-//        Button(
-//            onClick = { viewModel.sendMessage() },
-//            content = { Text("send") }
-//        )
-//        Button(
-//            onClick = { viewModel.disconnectWebSocket() },
-//            content = { Text("disconnect") }
-//        )
+        Button(
+            onClick = { viewModel.connectWebSocket() },
+            content = { Text("connect") }
+        )
+        Button(
+            enabled = false,
+            onClick = { viewModel.sendMessage() },
+            content = { Text("send") }
+        )
+        Button(
+            enabled = false,
+            onClick = { viewModel.disconnectWebSocket() },
+            content = { Text("disconnect") }
+        )
 
         Spacer(Modifier.height(30.dp))
 

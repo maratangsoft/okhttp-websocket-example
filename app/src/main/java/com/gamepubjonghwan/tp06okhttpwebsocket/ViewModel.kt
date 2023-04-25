@@ -26,39 +26,49 @@ class ViewModel: androidx.lifecycle.ViewModel() {
 
     fun updateInputName(name: String){
         inputName = name
-        _uiState.update { currentState ->
-            currentState.copy(
-                name = name
-            )
-        }
+//        _uiState.update {
+//            it.copy(
+//                name = name
+//            )
+//        }
     }
 
     fun updateInputAge(age: String){
         try {
             inputAge = age.toInt()
-            _uiState.update { currentState ->
-                currentState.copy(
-                    age = age.toInt()
-                )
-            }
+//            _uiState.update {
+//                it.copy(
+//                    age = age.toInt()
+//                )
+//            }
         }
         catch (throwable: java.lang.NumberFormatException){
             Log.d("TTT", throwable.message.toString())
         }
     }
 
-    private val webSocketListener = WebSocketListener { jsonString ->
-        val jsonObject = JSONObject(jsonString)
-        val name = jsonObject.getString("name")
-        val age = jsonObject.getInt("age")
+    private val webSocketListener = WebSocketListener(
+        onOpen = {
+            _uiState.update {
+                it.copy(
+                    btnSendIsEnabled = true,
+                    btnDisconnectEnabled = true
+                )
+            }
+        },
+        onMessage = { jsonString ->
+            val jsonObject = JSONObject(jsonString)
+            val name = jsonObject.getString("name")
+            val age = jsonObject.getInt("age")
 
-        _uiState.update { currentState ->
-            currentState.copy(
-                name = name,
-                age = age
-            )
+            _uiState.update {
+                it.copy(
+                    name = name,
+                    age = age
+                )
+            }
         }
-    }
+    )
 
     fun connectWebSocket() {
         val client = OkHttpClient()
