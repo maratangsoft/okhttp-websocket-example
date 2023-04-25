@@ -18,7 +18,7 @@ class ViewModel: androidx.lifecycle.ViewModel() {
 
     var inputName by mutableStateOf("")
         private set
-    var inputAge by mutableStateOf("")
+    var inputAge by mutableStateOf(0)
         private set
 
     private val _uiState = MutableStateFlow(UiState())
@@ -26,10 +26,25 @@ class ViewModel: androidx.lifecycle.ViewModel() {
 
     fun updateInputName(name: String){
         inputName = name
+        _uiState.update { currentState ->
+            currentState.copy(
+                name = name
+            )
+        }
     }
 
     fun updateInputAge(age: String){
-        inputAge = age
+        try {
+            inputAge = age.toInt()
+            _uiState.update { currentState ->
+                currentState.copy(
+                    age = age.toInt()
+                )
+            }
+        }
+        catch (throwable: java.lang.NumberFormatException){
+            Log.d("TTT", throwable.message.toString())
+        }
     }
 
     private val webSocketListener = WebSocketListener { jsonString ->
@@ -43,7 +58,6 @@ class ViewModel: androidx.lifecycle.ViewModel() {
                 age = age
             )
         }
-        UiState(name, age)
     }
 
     fun connectWebSocket() {
@@ -58,7 +72,7 @@ class ViewModel: androidx.lifecycle.ViewModel() {
     fun sendMessage() {
         val jsonObject = JSONObject()
         jsonObject.put("name", inputName)
-        jsonObject.put("age", inputAge.toInt())
+        jsonObject.put("age", inputAge)
 
         val jsonString = jsonObject.toString()
         Log.d("TTT", jsonString)
